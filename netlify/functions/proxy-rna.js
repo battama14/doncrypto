@@ -1,5 +1,7 @@
-exports.handler = async function(event) {
-  const query = event.queryStringParameters?.query;
+const fetch = require('node-fetch');
+
+exports.handler = async function(event, context) {
+  const query = event.queryStringParameters.query;
   if (!query) {
     return {
       statusCode: 400,
@@ -7,16 +9,11 @@ exports.handler = async function(event) {
     };
   }
   try {
-    // fetch natif Node.js 18+ dans Netlify
     const response = await fetch(
-      `https://entreprise.data.gouv.fr/api/rna/v1/full_text/${encodeURIComponent(query)}`
+      `https://entreprise.data.gouv.fr/api/rna/v1/full_text/${encodeURIComponent(
+        query
+      )}`
     );
-    if (!response.ok) {
-      return {
-        statusCode: response.status,
-        body: JSON.stringify({ error: `API returned status ${response.status}` }),
-      };
-    }
     const data = await response.json();
     return {
       statusCode: 200,
@@ -26,11 +23,11 @@ exports.handler = async function(event) {
       },
     };
   } catch (error) {
-    console.error('Fetch error:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: 'API fetch failed' }),
     };
   }
 };
+
 
