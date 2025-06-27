@@ -123,7 +123,12 @@
   </header>
 
   <div class="search-box">
-    <input type="text" id="keyword" placeholder="Mots-clés (ex: enfants, hôpital, aide alimentaire)" autocomplete="off" />
+    <input
+      type="text"
+      id="keyword"
+      placeholder="Mots-clés (ex: enfants, hôpital, aide alimentaire)"
+      autocomplete="off"
+    />
     <input
       type="text"
       id="department"
@@ -155,6 +160,7 @@
     let userAddress = null;
     let favorites = JSON.parse(localStorage.getItem('cryptoDonFavorites')) || [];
     let map, markerGroup;
+    let currentAssocList = [];
 
     const connectBtn = document.getElementById('connectWalletBtn');
     const walletAddressP = document.getElementById('wallet-address');
@@ -206,58 +212,54 @@
       assocListDiv.innerHTML = '<p class="no-results">Chargement...</p>';
       mapDiv.style.display = 'none';
       if (keyword.trim().length < 2 && department.trim().length === 0) {
-        assocListDiv.innerHTML = '<p class="no-results">Veuillez saisir un mot-clé ou un département.</p>';
+        assocListDiv.innerHTML =
+          '<p class="no-results">Veuillez saisir un mot-clé ou un département.</p>';
         return;
       }
 
       try {
-        // Recherche par texte libre
-        const urlKeyword = keyword.trim().length > 0
-          ? `https://entreprise.data.gouv.fr/api/rna/v1/full_text/${encodeURIComponent(keyword.trim())}`
-          : null;
-        // Recherche par département (code postal)
-        let resultsKeyword = [];
-        let resultsDepartment = [];
+        // Appel au proxy Netlify function
+        const url = `/.netlify/functions/proxy-rna?query=${encodeURIComponent(keyword.trim())}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        let resultsKeyword = data.association || [];
 
-        if (urlKeyword) {
-          const resK = await fetch(urlKeyword);
-          const dataK = await resK.json();
-          resultsKeyword = dataK.association || [];
-        }
-
-        // Filtrage département sur résultats keyword OU appel direct si pas de keyword
+        // Si filtre département, on fait un filtre en JS (car pas de endpoint dédié avec CORS)
         if (department.trim().length > 0) {
-          const resD = await fetch(
-            `https://entreprise.data.gouv.fr/api/rna/v1/departement/${encodeURIComponent(department.trim())}`
-          );
-          const dataD = await resD.json();
-          resultsDepartment = dataD.association || [];
-        }
-
-        // On combine et on filtre pertinence caritatif
-        let combined = [];
-
-        if (resultsKeyword.length > 0 && resultsDepartment.length > 0) {
-          // Intersection par id
-          combined = resultsKeyword.filter(k => resultsDepartment.some(d => d.id === k.id));
-        } else if (resultsKeyword.length > 0) {
-          combined = resultsKeyword;
-        } else if (resultsDepartment.length > 0) {
-          combined = resultsDepartment;
-        } else {
-          combined = [];
+          const depCode = department.trim();
+          resultsKeyword = resultsKeyword.filter((a) => {
+            // adresse_siege parfois null
+            const addr = a.adresse_siege || '';
+            // chercher un code postal français (ex: 75001)
+            const cpMatch = addr.match(/\b\d{5}\b/);
+            if (!cpMatch) return false;
+            const cp = cpMatch[0];
+            // comparer les 2 ou 3 premiers chiffres au code département donné (ex: "75" dans "75001")
+            return cp.startsWith(depCode);
+          });
         }
 
         // Filtre caritatif par mots clés dans l'objet social 1
-        const caritativeKeywords = ['caritatif', 'enfant', 'hôpital', 'solidarité', 'humanitaire', 'alimentaire', 'aide'];
-
-        const filtered = combined.filter(a => {
+        const caritativeKeywords = [
+          'caritatif',
+          'enfant',
+          'hôpital',
+          'solidarité',
+          'humanitaire',
+          'alimentaire',
+          'aide',
+          'social',
+          'santé',
+          'handicap',
+        ];
+        const filtered = resultsKeyword.filter((a) => {
           const desc = (a.objet_social_1 || '').toLowerCase();
-          return caritativeKeywords.some(k => desc.includes(k));
+          return caritativeKeywords.some((k) => desc.includes(k));
         });
 
         if (filtered.length === 0) {
-          assocListDiv.innerHTML = '<p class="no-results">Aucune association caritative trouvée pour ces critères.</p>';
+          assocListDiv.innerHTML =
+            '<p class="no-results">Aucune association caritative trouvée pour ces critères.</p>';
           return;
         }
 
@@ -265,7 +267,8 @@
         displayAssociations(filtered);
       } catch (e) {
         console.error('Erreur API associations', e);
-        assocListDiv.innerHTML = '<p class="no-results">Erreur lors de la recherche. Veuillez réessayer.</p>';
+        assocListDiv.innerHTML =
+          '<p class="no-results">Erreur lors de la recherche. Veuillez réessayer.</p>';
       }
     }
 
@@ -277,25 +280,43 @@
         const card = document.createElement('div');
         card.className = 'card';
 
-        let site = assoc.site_web || assoc.url_site_web || assoc.site_web_url || assoc.lien || '';
-        if(site && !site.startsWith('http')) site = 'http://' + site;
+        let site =
+          assoc.site_web || assoc.url_site_web || assoc.site_web_url || assoc.lien || '';
+        if (site && !site.startsWith('http')) site = 'http://' + site;
 
         card.innerHTML = `
           <h3>${assoc.titre}</h3>
           <div class="assoc-info">
-            <p><strong>Objet :</strong> ${assoc.objet || assoc.objet_social_1 || 'Non renseigné'}</p>
+            <p><strong>Objet :</strong> ${
+              assoc.objet || assoc.objet_social_1 || 'Non renseigné'
+            }</p>
             <p><strong>Adresse :</strong> ${assoc.adresse_siege || 'Non renseignée'}</p>
             <p><strong>SIREN :</strong> ${assoc.siren || 'Non renseigné'}</p>
             <p><strong>Site web :</strong> ${
-              site ? `<a href="${site}" target="_blank" rel="noopener noreferrer">${site}</a>` : 'N/A'
+              site
+                ? `<a href="${site}" target="_blank" rel="noopener noreferrer">${site}</a>`
+                : 'N/A'
             }</p>
           </div>
-          <input type="number" min="0" step="0.0001" placeholder="Montant en ETH" id="donate-${i}" style="width:100%; margin-top:10px; padding:6px;" />
-          <button class="btn donate-btn" onclick="donateAssoc('${assoc.titre}', ${i})">Faire un don</button>
+          <input
+            type="number"
+            min="0"
+            step="0.0001"
+            placeholder="Montant en ETH"
+            id="donate-${i}"
+            style="width:100%; margin-top:10px; padding:6px;"
+          />
+          <button class="btn donate-btn" onclick="donateAssoc('${assoc.titre}', ${i})">
+            Faire un don
+          </button>
           <button class="fav-btn" onclick="toggleFavorite(currentAssocList[${i}])">
             ${isFavorite(assoc.id) ? '➖ Retirer du carnet' : '📌 Ajouter au carnet'}
           </button>
-          <button class="btn" onclick="showOnMap(${i})" style="margin-top: 0.5rem; background: #3b82f6; color: white;">
+          <button
+            class="btn"
+            onclick="showOnMap(${i})"
+            style="margin-top: 0.5rem; background: #3b82f6; color: white;"
+          >
             Voir sur la carte
           </button>
         `;
@@ -305,17 +326,20 @@
     }
 
     async function donateAssoc(name, idx) {
-      if (!userAddress) return alert('Connecte ton wallet d\'abord !');
+      if (!userAddress) return alert("Connecte ton wallet d'abord !");
       const input = document.getElementById(`donate-${idx}`);
       const amount = input?.value;
-      if (!amount || isNaN(amount) || amount <= 0) return alert('Montant invalide');
+      if (!amount || isNaN(amount) || amount <= 0)
+        return alert('Montant invalide');
 
       const ethPrice = await getEthPriceEUR();
       const eurValue = (parseFloat(amount) * ethPrice).toFixed(2);
 
-      alert(`Don simulé de ${amount} ETH (~€${eurValue}) pour l'association "${name}". (conversion automatique en EUR si nécessaire)`);
+      alert(
+        `Don simulé de ${amount} ETH (~€${eurValue}) pour l'association "${name}". (conversion automatique en EUR si nécessaire)`
+      );
 
-      // Simuler sauvegarde backend
+      // Simuler sauvegarde backend (tu dois remplacer l'URL par ta vraie API)
       await fetch('https://your-firebase-backend.com/api/donations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -325,7 +349,7 @@
           amount,
           eurValue,
           via: 'conversion si pas de wallet',
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         }),
       });
 
@@ -334,7 +358,9 @@
 
     async function getEthPriceEUR() {
       try {
-        const res = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=eur');
+        const res = await axios.get(
+          'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=eur'
+        );
         return res.data.ethereum.eur;
       } catch (e) {
         console.error('Prix ETH fail');
@@ -358,21 +384,23 @@
       const assoc = currentAssocList[idx];
       if (!assoc) return alert('Association non trouvée');
 
-      // On vérifie les coordonnées lat / lon sinon message d'erreur
+      // Vérifier lat/lon sinon message d'erreur
       if (!assoc.latitude || !assoc.longitude) {
-        alert('Coordonnées géographiques non disponibles pour cette association.');
+        alert(
+          "Coordonnées géographiques non disponibles pour cette association."
+        );
         return;
       }
 
       initMap();
       markerGroup.clearLayers();
       const marker = L.marker([assoc.latitude, assoc.longitude]).addTo(markerGroup);
-      marker.bindPopup(`<b>${assoc.titre}</b><br>${assoc.adresse_siege || ''}`).openPopup();
+      marker
+        .bindPopup(`<b>${assoc.titre}</b><br>${assoc.adresse_siege || ''}`)
+        .openPopup();
       map.setView([assoc.latitude, assoc.longitude], 13);
       mapDiv.scrollIntoView({ behavior: 'smooth' });
     }
-
-    let currentAssocList = [];
 
     document.getElementById('searchBtn').addEventListener('click', () => {
       const kw = document.getElementById('keyword').value;
@@ -380,9 +408,9 @@
       fetchAssociations(kw, dep);
     });
 
-    // Recherche à la touche Enter dans un champ input
-    ['keyword', 'department'].forEach(id => {
-      document.getElementById(id).addEventListener('keydown', e => {
+    // Recherche à la touche Enter
+    ['keyword', 'department'].forEach((id) => {
+      document.getElementById(id).addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
           document.getElementById('searchBtn').click();
@@ -392,6 +420,7 @@
   </script>
 </body>
 </html>
+
 
 
 
