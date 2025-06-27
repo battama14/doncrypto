@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CryptoDon - Dons crypto associations caritatives</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-sA+M1D5OYxZf+dqXtUxnCfsU9k4QDQKGT6kMTSknLv0="
+    crossorigin=""
+  />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fafb;
+      color: #111827;
+      padding: 1.5rem;
+      margin: 0;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .connect-btn {
+      background: #3b82f6;
+      color: white;
+    }
+    .search-box {
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .search-box input {
+      flex: 1 1 250px;
+      padding: 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    .search-box button {
+      background: #10b981;
+      color: white;
+      flex: 0 0 auto;
+      padding: 10px 24px;
+    }
+    .associations {
+      max-width: 960px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .donate-btn {
+      background: #10b981;
+      color: white;
+      margin-top: 1rem;
+      font-weight: 700;
+    }
+    #wallet-address {
+      margin-top: 10px;
+      color: #4b5563;
+    }
+    .fav-btn {
+      background: #f59e0b;
+      margin-top: 0.5rem;
+      font-weight: 600;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: white;
+      align-self: flex-start;
+    }
+    .assoc-info p {
+      margin: 0.2rem 0;
+      font-size: 0.9rem;
+      color: #374151;
+      word-break: break-word;
+    }
+    #map {
+      max-width: 960px;
+      height: 300px;
+      margin: 2rem auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+    .no-results {
+      text-align: center;
+      font-style: italic;
+      color: #6b7280;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌟 CryptoDon</h1>
+    <p>Faites un don crypto aux associations caritatives françaises (conversion en € si besoin)</p>
+    <button class="btn connect-btn" id="connectWalletBtn">Connecter mon wallet</button>
+    <p id="wallet-address"></p>
+  </header>
+
+  <div class="search-box">
+    <input
+      type="text"
+      id="keyword"
+      placeholder="Mots-clés (ex: enfants, hôpital, aide alimentaire)"
+      autocomplete="off"
+    />
+    <input
+      type="text"
+      id="department"
+      placeholder="Département (ex: 75, 13, 69)"
+      maxlength="3"
+      pattern="\\d{1,3}"
+      title="Entrez un numéro de département"
+      autocomplete="off"
+    />
+    <button id="searchBtn" class="btn">Rechercher</button>
+  </div>
+
+  <div id="assoc-list" class="associations"></div>
+
+  <div id="map"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/web3modal@2.6.0/dist/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-o0Zo4LvNfS33VU+mXbGu5Tt6Y1SZbFwY9t+8q2V4JCI="
+    crossorigin=""
+  ></script>
+  <script>
+    let provider;
+    let web3Modal;
+    let signer;
+    let userAddress = null;
+    let favorites = JSON.parse(localStorage.getItem('cryptoDonFavorites')) || [];
+    let map, markerGroup;
+    let currentAssocList = [];
+
+    const connectBtn = document.getElementById('connectWalletBtn');
+    const walletAddressP = document.getElementById('wallet-address');
+    const assocListDiv = document.getElementById('assoc-list');
+    const mapDiv = document.getElementById('map');
+
+    async function connectWallet() {
+      web3Modal = new window.Web3Modal.default({
+        cacheProvider: false,
+        providerOptions: {},
+      });
+      try {
+        const instance = await web3Modal.connect();
+        provider = new ethers.BrowserProvider(instance);
+        signer = await provider.getSigner();
+        userAddress = await signer.getAddress();
+        walletAddressP.innerText = `Connecté : ${userAddress}`;
+        connectBtn.disabled = true;
+        connectBtn.innerText = 'Wallet connecté';
+      } catch (e) {
+        alert('Connexion au wallet annulée ou impossible');
+      }
+    }
+
+    connectBtn.addEventListener('click', connectWallet);
+
+    function saveFavorites() {
+      localStorage.setItem('cryptoDonFavorites', JSON.stringify(favorites));
+    }
+
+    function toggleFavorite(assoc) {
+      const index = favorites.findIndex(fav => fav.id === assoc.id);
+      if (index === -1) {
+        favorites.push(assoc);
+        alert(`Association "${assoc.titre}" ajoutée au carnet de dons`);
+      } else {
+        favorites.splice(index, 1);
+        alert(`Association "${assoc.titre}" retirée du carnet de dons`);
+      }
+      saveFavorites();
+      displayAssociations(currentAssocList); // refresh affichage pour mettre à jour bouton
+    }
+
+    function isFavorite(id) {
+      return favorites.some(fav => fav.id === id);
+    }
+
+    async function fetchAssociations(keyword, department) {
+      assocListDiv.innerHTML = '<p class="no-results">Chargement...</p>';
+      mapDiv.style.display = 'none';
+      if (keyword.trim().length < 2 && department.trim().length === 0) {
+        assocListDiv.innerHTML =
+          '<p class="no-results">Veuillez saisir un mot-clé ou un département.</p>';
+        return;
+      }
+
+      try {
+        // Appel au proxy Netlify function
+        const url = `/.netlify/functions/proxy-rna?query=${encodeURIComponent(keyword.trim())}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        let resultsKeyword = data.association || [];
+
+        // Si filtre département, on fait un filtre en JS (car pas de endpoint dédié avec CORS)
+        if (department.trim().length > 0) {
+          const depCode = department.trim();
+          resultsKeyword = resultsKeyword.filter((a) => {
+            // adresse_siege parfois null
+            const addr = a.adresse_siege || '';
+            // chercher un code postal français (ex: 75001)
+            const cpMatch = addr.match(/\b\d{5}\b/);
+            if (!cpMatch) return false;
+            const cp = cpMatch[0];
+            // comparer les 2 ou 3 premiers chiffres au code département donné (ex: "75" dans "75001")
+            return cp.startsWith(depCode);
+          });
+        }
+
+        // Filtre caritatif par mots clés dans l'objet social 1
+        const caritativeKeywords = [
+          'caritatif',
+          'enfant',
+          'hôpital',
+          'solidarité',
+          'humanitaire',
+          'alimentaire',
+          'aide',
+          'social',
+          'santé',
+          'handicap',
+        ];
+        const filtered = resultsKeyword.filter((a) => {
+          const desc = (a.objet_social_1 || '').toLowerCase();
+          return caritativeKeywords.some((k) => desc.includes(k));
+        });
+
+        if (filtered.length === 0) {
+          assocListDiv.innerHTML =
+            '<p class="no-results">Aucune association caritative trouvée pour ces critères.</p>';
+          return;
+        }
+
+        currentAssocList = filtered;
+        displayAssociations(filtered);
+      } catch (e) {
+        console.error('Erreur API associations', e);
+        assocListDiv.innerHTML =
+          '<p class="no-results">Erreur lors de la recherche. Veuillez réessayer.</p>';
+      }
+    }
+
+    function displayAssociations(list) {
+      assocListDiv.innerHTML = '';
+      mapDiv.style.display = 'none';
+
+      list.forEach((assoc, i) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        let site =
+          assoc.site_web || assoc.url_site_web || assoc.site_web_url || assoc.lien || '';
+        if (site && !site.startsWith('http')) site = 'http://' + site;
+
+        card.innerHTML = `
+          <h3>${assoc.titre}</h3>
+          <div class="assoc-info">
+            <p><strong>Objet :</strong> ${
+              assoc.objet || assoc.objet_social_1 || 'Non renseigné'
+            }</p>
+            <p><strong>Adresse :</strong> ${assoc.adresse_siege || 'Non renseignée'}</p>
+            <p><strong>SIREN :</strong> ${assoc.siren || 'Non renseigné'}</p>
+            <p><strong>Site web :</strong> ${
+              site
+                ? `<a href="${site}" target="_blank" rel="noopener noreferrer">${site}</a>`
+                : 'N/A'
+            }</p>
+          </div>
+          <input
+            type="number"
+            min="0"
+            step="0.0001"
+            placeholder="Montant en ETH"
+            id="donate-${i}"
+            style="width:100%; margin-top:10px; padding:6px;"
+          />
+          <button class="btn donate-btn" onclick="donateAssoc('${assoc.titre}', ${i})">
+            Faire un don
+          </button>
+          <button class="fav-btn" onclick="toggleFavorite(currentAssocList[${i}])">
+            ${isFavorite(assoc.id) ? '➖ Retirer du carnet' : '📌 Ajouter au carnet'}
+          </button>
+          <button
+            class="btn"
+            onclick="showOnMap(${i})"
+            style="margin-top: 0.5rem; background: #3b82f6; color: white;"
+          >
+            Voir sur la carte
+          </button>
+        `;
+
+        assocListDiv.appendChild(card);
+      });
+    }
+
+    async function donateAssoc(name, idx) {
+      if (!userAddress) return alert("Connecte ton wallet d'abord !");
+      const input = document.getElementById(`donate-${idx}`);
+      const amount = input?.value;
+      if (!amount || isNaN(amount) || amount <= 0)
+        return alert('Montant invalide');
+
+      const ethPrice = await getEthPriceEUR();
+      const eurValue = (parseFloat(amount) * ethPrice).toFixed(2);
+
+      alert(
+        `Don simulé de ${amount} ETH (~€${eurValue}) pour l'association "${name}". (conversion automatique en EUR si nécessaire)`
+      );
+
+      // Simuler sauvegarde backend (tu dois remplacer l'URL par ta vraie API)
+      await fetch('https://your-firebase-backend.com/api/donations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: userAddress,
+          to: name,
+          amount,
+          eurValue,
+          via: 'conversion si pas de wallet',
+          timestamp: new Date().toISOString(),
+        }),
+      });
+
+      input.value = '';
+    }
+
+    async function getEthPriceEUR() {
+      try {
+        const res = await axios.get(
+          'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=eur'
+        );
+        return res.data.ethereum.eur;
+      } catch (e) {
+        console.error('Prix ETH fail');
+        return 0;
+      }
+    }
+
+    // Leaflet map init & marker group
+    function initMap() {
+      if (map) return;
+      mapDiv.style.display = 'block';
+      map = L.map('map').setView([46.6, 2.4], 6); // France centre coords
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution:
+          '&copy; <a href="https://openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
+      }).addTo(map);
+      markerGroup = L.layerGroup().addTo(map);
+    }
+
+    function showOnMap(idx) {
+      const assoc = currentAssocList[idx];
+      if (!assoc) return alert('Association non trouvée');
+
+      // Vérifier lat/lon sinon message d'erreur
+      if (!assoc.latitude || !assoc.longitude) {
+        alert(
+          "Coordonnées géographiques non disponibles pour cette association."
+        );
+        return;
+      }
+
+      initMap();
+      markerGroup.clearLayers();
+      const marker = L.marker([assoc.latitude, assoc.longitude]).addTo(markerGroup);
+      marker
+        .bindPopup(`<b>${assoc.titre}</b><br>${assoc.adresse_siege || ''}`)
+        .openPopup();
+      map.setView([assoc.latitude, assoc.longitude], 13);
+      mapDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const kw = document.getElementById('keyword').value;
+      const dep = document.getElementById('department').value;
+      fetchAssociations(kw, dep);
+    });
+
+    // Recherche à la touche Enter
+    ['keyword', 'department'].forEach((id) => {
+      document.getElementById(id).addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          document.getElementById('searchBtn').click();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
