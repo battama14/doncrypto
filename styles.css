@@ -1,0 +1,1154 @@
+/* Variables pour les couleurs */
+:root {
+    --primary-color: #0066cc; /* Couleur bleue qui sera ajustée pour correspondre au logo */
+    --primary-color-dark: #004d99;
+    --primary-color-light: #3399ff;
+    --primary-glow: rgba(0, 102, 204, 0.7);
+    --background-color: #0a0a0a;
+    --background-color-light: #121212;
+    --text-color: #ffffff;
+    --text-color-muted: #b0b0b0;
+    --accent-color: #00aaff;
+    --border-color: #333333;
+    --success-color: #4CAF50;
+    --warning-color: #FFC107;
+    --danger-color: #F44336;
+    --neon-glow: 0 0 10px rgba(0, 102, 204, 0.7), 0 0 20px rgba(0, 102, 204, 0.5), 0 0 30px rgba(0, 102, 204, 0.3);
+}
+
+/* Reset et styles de base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-color-light);
+    text-shadow: var(--neon-glow);
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Animation de graphique de trading en arrière-plan */
+#trading-chart {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.15;
+    background-color: var(--background-color);
+}
+
+/* Header et Navigation */
+header {
+    background-color: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 15px 0;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.5s ease;
+}
+
+header:hover {
+    background-color: rgba(10, 10, 10, 0.95);
+}
+
+.logo-container {
+    margin-left: 30px;
+}
+
+.logo {
+    height: 50px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    margin-right: 30px;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.nav-links li {
+    padding: 0 15px;
+}
+
+.nav-links a {
+    color: var(--text-color);
+    font-weight: 500;
+    position: relative;
+    padding: 5px 0;
+    transition: all 0.3s ease;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--primary-color-light);
+    text-shadow: 0 0 10px var(--primary-color-light);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+    box-shadow: var(--neon-glow);
+}
+
+.vip-link {
+    background-color: var(--primary-color);
+    color: white !important;
+    padding: 8px 15px !important;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    text-shadow: none !important;
+    border: 1px solid transparent;
+}
+
+.vip-link:hover {
+    background-color: transparent;
+    color: var(--primary-color) !important;
+    border: 1px solid var(--primary-color);
+    box-shadow: var(--neon-glow);
+}
+
+.vip-link::after {
+    display: none;
+}
+
+.burger {
+    display: none;
+    cursor: pointer;
+}
+
+.burger div {
+    width: 25px;
+    height: 3px;
+    background-color: var(--text-color);
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Hero Section */
+#hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-top: 0;
+    padding-top: 80px;
+}
+
+.hero-content {
+    max-width: 800px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+    animation: fadeIn 1.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 800;
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+    color: var(--text-color-muted);
+}
+
+.highlight {
+    color: var(--primary-color);
+    position: relative;
+    display: inline-block;
+}
+
+.highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-color);
+    box-shadow: var(--neon-glow);
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px 35px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid var(--primary-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cta-button:hover {
+    background-color: transparent;
+    color: var(--primary-color);
+    box-shadow: var(--neon-glow);
+    transform: translateY(-5px);
+}
+
+.telegram-button {
+    display: inline-block;
+    background-color: #0088cc;
+    color: white;
+    padding: 15px 35px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid #0088cc;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.telegram-button:hover {
+    background-color: transparent;
+    color: #0088cc;
+    box-shadow: 0 0 10px rgba(0, 136, 204, 0.7), 0 0 20px rgba(0, 136, 204, 0.5);
+    transform: translateY(-5px);
+}
+
+.telegram-button i {
+    margin-right: 8px;
+}
+
+/* Sections générales */
+.section {
+    padding: 120px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.section:nth-child(even) {
+    background-color: var(--background-color-light);
+}
+
+.section h2 {
+    text-align: center;
+    font-size: 3rem;
+    margin-bottom: 60px;
+    position: relative;
+    padding-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background-color: var(--primary-color);
+    box-shadow: var(--neon-glow);
+}
+
+/* Section en construction */
+.construction-container {
+    background-color: rgba(18, 18, 18, 0.7);
+    border-radius: 15px;
+    padding: 50px;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.construction-container:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 102, 204, 0.2);
+}
+
+.construction-icon {
+    font-size: 4rem;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.construction-container h3 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: var(--primary-color-light);
+}
+
+.construction-container p {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: var(--text-color-muted);
+}
+
+.construction-container .telegram-button {
+    margin-top: 30px;
+}
+
+/* Footer */
+footer {
+    background-color: rgba(10, 10, 10, 0.95);
+    padding: 70px 0 20px;
+    border-top: 1px solid var(--border-color);
+    position: relative;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 0 20px;
+}
+
+.footer-logo {
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+}
+
+.footer-logo-img {
+    height: 60px;
+    margin-bottom: 15px;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    flex: 2;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 150px;
+}
+
+.footer-column h4 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.footer-column h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background-color: var(--primary-color);
+    box-shadow: var(--neon-glow);
+}
+
+.footer-column ul li {
+    margin-bottom: 15px;
+}
+
+.footer-column a {
+    color: var(--text-color-muted);
+    transition: all 0.3s ease;
+    position: relative;
+    padding-left: 15px;
+}
+
+.footer-column a::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+    transition: transform 0.3s ease;
+}
+
+.footer-column a:hover {
+    color: var(--primary-color-light);
+}
+
+.footer-column a:hover::before {
+    transform: translateX(5px);
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background-color: rgba(30, 30, 30, 0.7);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    font-size: 1.5rem;
+}
+
+.social-link:hover {
+    transform: translateY(-10px) rotate(360deg);
+}
+
+.social-link.telegram {
+    background-color: #0088cc;
+    color: white;
+}
+
+.social-link.telegram:hover {
+    background-color: transparent;
+    color: #0088cc;
+    box-shadow: 0 0 10px rgba(0, 136, 204, 0.7), 0 0 20px rgba(0, 136, 204, 0.5);
+}
+
+.footer-bottom {
+    max-width: 1200px;
+    margin: 50px auto 0;
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-bottom p {
+    color: var(--text-color-muted);
+    font-size: 0.9rem;
+}
+
+.disclaimer {
+    margin-top: 10px;
+    font-style: italic;
+}
+
+/* Media Queries */
+@media screen and (max-width: 1024px) {
+    .nav-links {
+        width: 60%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+    
+    .nav-links {
+        position: absolute;
+        right: 0;
+        top: 80px;
+        height: calc(100vh - 80px);
+        background-color: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(10px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        width: 70%;
+        transform: translateX(100%);
+        transition: transform 0.5s ease-in;
+        z-index: 999;
+        box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
+    }
+    
+    .nav-links li {
+        opacity: 0;
+    }
+    
+    .burger {
+        display: block;
+    }
+    
+    .nav-active {
+        transform: translateX(0%);
+    }
+    
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-content p {
+        font-size: 1.2rem;
+    }
+    
+    .section h2 {
+        font-size: 2.2rem;
+    }
+    
+    .construction-container {
+        padding: 30px;
+    }
+    
+    .construction-container h3 {
+        font-size: 1.5rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cta-button, .telegram-button {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@keyframes navLinkFade {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.toggle .line1 {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.toggle .line2 {
+    opacity: 0;
+}
+
+.toggle .line3 {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Animation des bougies japonaises */
+.candle {
+    position: absolute;
+    width: 8px;
+    background-color: var(--success-color);
+    transition: height 0.5s ease;
+}
+
+.candle::before, .candle::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: 1px;
+    background-color: inherit;
+}
+
+.candle::before {
+    top: 0;
+    transform: translateY(-100%) translateX(-50%);
+}
+
+.candle::after {
+    bottom: 0;
+    transform: translateY(100%) translateX(-50%);
+}
+
+.candle.up {
+    background-color: var(--success-color);
+}
+
+.candle.down {
+    background-color: var(--danger-color);
+}
+
+/* Animation de chargement */
+.loading-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--primary-color), var(--primary-color-light));
+    z-index: 9999;
+    box-shadow: var(--neon-glow);
+    animation: loading 2s ease-in-out;
+}
+
+@keyframes loading {
+    0% {
+        width: 0;
+    }
+    50% {
+        width: 65%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+/* Effet de survol sur les sections */
+.section {
+    transition: transform 0.5s ease;
+}
+
+.section:hover {
+    transform: scale(1.01);
+}
+
+/* Animation de particules */
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    background-color: var(--primary-color-light);
+    pointer-events: none;
+    opacity: 0;
+    animation: particleAnimation 3s ease-in-out;
+}
+
+@keyframes particleAnimation {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) translateX(var(--x));
+        opacity: 0;
+    }
+}
+
+/* Styles pour la section Contact */
+.contact-content {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.contact-info h3 {
+    font-size: 2.5rem;
+    color: var(--primary-color-light);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.contact-info p {
+    font-size: 1.3rem;
+    color: var(--text-color-muted);
+    margin-bottom: 40px;
+}
+
+.contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.contact-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 30px;
+    border-radius: 15px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.contact-button i {
+    margin-right: 15px;
+    font-size: 1.5rem;
+}
+
+.telegram-btn {
+    background-color: #0088cc;
+    border-color: #0088cc;
+}
+
+.telegram-btn:hover {
+    background-color: transparent;
+    color: #0088cc;
+    border-color: #0088cc;
+    box-shadow: 0 0 10px rgba(0, 136, 204, 0.7), 0 0 20px rgba(0, 136, 204, 0.5);
+    transform: translateY(-5px);
+}
+
+.tiktok-btn {
+    background-color: #ff0050;
+    border-color: #ff0050;
+}
+
+.tiktok-btn:hover {
+    background-color: transparent;
+    color: #ff0050;
+    border-color: #ff0050;
+    box-shadow: 0 0 10px rgba(255, 0, 80, 0.7), 0 0 20px rgba(255, 0, 80, 0.5);
+    transform: translateY(-5px);
+}
+
+/* Styles pour la section Apprentissage */
+.learning-content {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.priority-ebook {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.1), rgba(0, 102, 204, 0.05));
+    border: 2px solid var(--primary-color);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 102, 204, 0.2);
+    transition: all 0.3s ease;
+}
+
+.priority-ebook:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 102, 204, 0.3);
+}
+
+.priority-ebook::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-color-light), var(--primary-color));
+    z-index: -1;
+    border-radius: 20px;
+    opacity: 0.3;
+    animation: borderGlow 3s infinite;
+}
+
+@keyframes borderGlow {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+
+.ebook-icon {
+    font-size: 4rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.priority-ebook h3 {
+    font-size: 2.2rem;
+    color: var(--primary-color-light);
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.ebook-highlight {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 30px;
+    margin: 20px 0;
+}
+
+.ebook-highlight p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    line-height: 1.8;
+}
+
+.ebook-highlight p:first-child {
+    color: #ffcc00;
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+.ebook-button {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color-dark));
+    color: white;
+    padding: 18px 40px;
+    border-radius: 15px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid var(--primary-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 20px;
+    box-shadow: 0 5px 20px rgba(0, 102, 204, 0.4);
+}
+
+.ebook-button:hover {
+    background: transparent;
+    color: var(--primary-color);
+    box-shadow: var(--neon-glow);
+    transform: translateY(-5px);
+}
+
+.ebook-button i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.learning-next-steps {
+    opacity: 0.8;
+}
+
+/* Styles pour les icônes sociales dans la section contact */
+.social-icons-grid {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 40px 0;
+    flex-wrap: wrap;
+}
+
+.social-icon-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    padding: 20px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 2px solid transparent;
+    min-width: 120px;
+}
+
+.social-icon-link:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.social-icon-link i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.social-icon-link span {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    text-align: center;
+}
+
+.telegram-icon {
+    border-color: #0088cc;
+}
+
+.telegram-icon:hover {
+    border-color: #0088cc;
+    box-shadow: 0 15px 30px rgba(0, 136, 204, 0.4);
+}
+
+.telegram-icon i {
+    color: #0088cc;
+}
+
+.telegram-icon:hover i {
+    color: #0088cc;
+    text-shadow: 0 0 20px rgba(0, 136, 204, 0.8);
+}
+
+.tiktok-icon {
+    border-color: #ff0050;
+}
+
+.tiktok-icon:hover {
+    border-color: #ff0050;
+    box-shadow: 0 15px 30px rgba(255, 0, 80, 0.4);
+}
+
+.tiktok-icon i {
+    color: #ff0050;
+}
+
+.tiktok-icon:hover i {
+    color: #ff0050;
+    text-shadow: 0 0 20px rgba(255, 0, 80, 0.8);
+}
+
+.instagram-icon {
+    border-color: #e4405f;
+}
+
+.instagram-icon:hover {
+    border-color: #e4405f;
+    box-shadow: 0 15px 30px rgba(228, 64, 95, 0.4);
+}
+
+.instagram-icon i {
+    background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.instagram-icon:hover i {
+    text-shadow: 0 0 20px rgba(228, 64, 95, 0.8);
+}
+
+/* Styles pour les icônes sociales du footer */
+.footer-column ul li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    padding: 5px 0;
+}
+
+.footer-column ul li a:hover {
+    color: var(--primary-color-light);
+    transform: translateX(5px);
+}
+
+.footer-column ul li i {
+    font-size: 1.2rem;
+    width: 20px;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.social-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(0);
+    transition: transform 0.3s ease;
+}
+
+.social-link:hover::before {
+    transform: scale(1);
+}
+
+.social-link i {
+    font-size: 1.8rem;
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    transform: translateY(-5px);
+}
+
+.social-link.telegram {
+    background-color: #0088cc;
+    border-color: #0088cc;
+}
+
+.social-link.telegram:hover {
+    box-shadow: 0 10px 20px rgba(0, 136, 204, 0.5);
+}
+
+.social-link.tiktok {
+    background-color: #ff0050;
+    border-color: #ff0050;
+}
+
+.social-link.tiktok:hover {
+    box-shadow: 0 10px 20px rgba(255, 0, 80, 0.5);
+}
+
+.social-link.instagram {
+    background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+}
+
+.social-link.instagram:hover {
+    box-shadow: 0 10px 20px rgba(225, 48, 108, 0.5);
+}
+
+/* Responsive pour les nouvelles sections */
+@media (max-width: 768px) {
+    .contact-links {
+        gap: 15px;
+    }
+    
+    .contact-button {
+        padding: 15px 20px;
+        font-size: 1rem;
+    }
+    
+    .social-icons-grid {
+        gap: 20px;
+    }
+    
+    .social-icon-link {
+        min-width: 100px;
+        padding: 15px;
+    }
+    
+    .social-icon-link i {
+        font-size: 2.5rem;
+    }
+    
+    .social-links {
+        gap: 15px;
+    }
+    
+    .social-link {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .social-link i {
+        font-size: 1.5rem;
+    }
+    
+    .priority-ebook {
+        padding: 25px;
+        margin: 0 20px 40px;
+    }
+    
+    .priority-ebook h3 {
+        font-size: 1.8rem;
+    }
+    
+    .ebook-highlight {
+        padding: 20px;
+    }
+    
+    .ebook-button {
+        padding: 15px 30px;
+        font-size: 1.1rem;
+    }
+}
