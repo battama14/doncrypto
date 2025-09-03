@@ -580,12 +580,13 @@ nav {
     overflow-y: auto;
 }
 
-/* Dashboard Grid */
+/* Dashboard Grid - Responsive Design */
 .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 25px;
     height: 100%;
+    padding: 0 10px;
 }
 
 .dashboard-card {
@@ -1408,10 +1409,297 @@ nav {
     left: 100%;
 }
 
-/* Responsive pour les nouvelles fonctionnalités */
-@media (max-width: 768px) {
+/* ==== RESPONSIVE DESIGN POUR TABLEAU DE BORD ==== */
+
+/* 1️⃣ TABLETTE (768px à 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .vip-modal-content {
+        width: 95%;
+        margin: 2.5% auto;
+        height: 90vh;
+        border-radius: 15px;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        padding: 0 15px;
+    }
+    
+    .dashboard-card {
+        min-height: 350px;
+    }
+    
+    .card-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .correlation-grid,
+    .trends-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 15px;
+    }
+    
+    .correlation-pair,
+    .trend-item {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+    
+    .calendar-links {
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .calendar-link {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+}
+
+/* 2️⃣ TABLETTE PETITE (481px à 768px) */
+@media (max-width: 768px) and (min-width: 481px) {
+    .vip-modal-content {
+        width: 98%;
+        margin: 1% auto;
+        height: 95vh;
+        border-radius: 10px;
+    }
+    
+    .vip-modal-header {
+        padding: 15px 20px;
+        border-bottom: 2px solid var(--primary-color);
+    }
+    
+    .vip-modal-header h2 {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 0 10px;
+    }
+    
+    .dashboard-card {
+        min-height: 300px;
+        margin-bottom: 15px;
+    }
+    
+    .card-header {
+        padding: 12px 15px;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    
+    .card-header h3 {
+        font-size: 1.1rem;
+        width: 100%;
+        margin-bottom: 10px;
+        text-align: center;
+        color: var(--primary-color-light);
+    }
+    
+    .refresh-btn {
+        position: absolute;
+        top: 12px;
+        right: 15px;
+    }
+    
+    .correlation-grid,
+    .trends-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 10px;
+    }
+    
+    .correlation-pair,
+    .trend-item {
+        padding: 10px;
+        font-size: 0.85rem;
+        border-radius: 8px;
+    }
+    
+    .calendar-links {
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+    
+    .calendar-link {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+    
+    .technical-info {
+        font-size: 0.75rem;
+        margin-top: 8px;
+    }
+    
+    .currency-details small {
+        font-size: 0.7rem;
+    }
+}
+
+/* 3️⃣ MOBILE (320px à 480px) */
+@media (max-width: 480px) {
+    .vip-modal-content {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        margin: 0;
+    }
+    
+    .vip-modal-header {
+        padding: 12px 15px;
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-color-light));
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    
+    .vip-modal-header h2 {
+        font-size: 1.1rem;
+        text-align: center;
+        margin: 0;
+    }
+    
+    .vip-modal-close {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.5rem;
+        color: white;
+    }
+    
+    .vip-modal-body {
+        padding: 10px 8px;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 0 5px;
+        height: auto;
+    }
+    
+    .dashboard-card {
+        min-height: 280px;
+        margin-bottom: 12px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 102, 204, 0.2);
+    }
+    
+    .card-header {
+        padding: 10px 12px;
+        background: linear-gradient(135deg, 
+            rgba(0, 102, 204, 0.1), 
+            rgba(0, 102, 204, 0.05)
+        );
+        border-radius: 12px 12px 0 0;
+        position: relative;
+    }
+    
+    .card-header h3 {
+        font-size: 1rem;
+        margin: 0;
+        text-align: center;
+        color: var(--primary-color-light);
+        font-weight: bold;
+    }
+    
+    .refresh-btn {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        padding: 6px;
+        background: rgba(0, 102, 204, 0.2);
+        border-radius: 50%;
+    }
+    
+    .correlation-grid,
+    .trends-grid,
+    .performance-content,
+    .alerts-content,
+    .news-content {
+        padding: 8px 10px;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    
+    .correlation-pair,
+    .trend-item,
+    .performance-item,
+    .alert-item,
+    .news-item {
+        padding: 8px 10px;
+        margin-bottom: 6px;
+        font-size: 0.8rem;
+        border-radius: 6px;
+        border-left: 3px solid var(--primary-color);
+    }
+    
+    .correlation-pair strong,
+    .trend-item .currency {
+        font-size: 0.85rem;
+        color: var(--primary-color-light);
+    }
+    
+    .correlation-value,
+    .trend-value {
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+    
+    .calendar-widget {
+        height: 180px;
+        overflow: hidden;
+    }
+    
+    .tradingview-widget-container {
+        height: 180px !important;
+    }
+    
+    .calendar-links {
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 10px;
+    }
+    
+    .calendar-link {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        text-align: center;
+        border-radius: 6px;
+    }
+    
+    .calendar-fallback {
+        padding: 20px 10px;
+    }
+    
+    .calendar-fallback h4 {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+    
+    .calendar-fallback-link {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        margin-bottom: 8px;
+    }
+    
     .technical-info {
         font-size: 0.7rem;
+        margin-top: 6px;
+        padding-top: 6px;
     }
     
     .currency-details small {
@@ -1421,25 +1709,100 @@ nav {
     .news-meta {
         flex-direction: column;
         align-items: flex-start;
-        gap: 5px;
+        gap: 4px;
+    }
+    
+    .news-source {
+        font-size: 0.7rem;
+        padding: 2px 6px;
     }
     
     .alert-header {
         flex-direction: column;
-        gap: 5px;
+        gap: 4px;
+        margin-bottom: 6px;
     }
     
     .alert-priority {
         align-self: flex-start;
+        font-size: 0.65rem;
+        padding: 1px 4px;
+    }
+}
+
+/* 4️⃣ OPTIMISATIONS SPÉCIALES MOBILE */
+@media (max-width: 360px) {
+    .vip-modal-header h2 {
+        font-size: 1rem;
     }
     
-    .fallback-links {
-        gap: 8px;
+    .dashboard-card {
+        min-height: 250px;
     }
     
-    .calendar-fallback-link {
-        padding: 10px 15px;
+    .card-header h3 {
         font-size: 0.9rem;
+    }
+    
+    .correlation-pair,
+    .trend-item {
+        font-size: 0.75rem;
+        padding: 6px 8px;
+    }
+    
+    .calendar-widget {
+        height: 150px;
+    }
+}
+
+/* 🎯 PRIORITÉ MAXIMALE - STYLES VIP RESPONSIVE */
+/* Ces styles prennent le dessus sur tous les autres */
+
+/* Section VIP principale responsive */
+@media (max-width: 768px) {
+    .vip-hero {
+        padding: 40px 20px;
+        text-align: center;
+    }
+    
+    .vip-hero h3 {
+        font-size: 2rem;
+    }
+    
+    .vip-hero p {
+        font-size: 1.1rem;
+    }
+    
+    .vip-dashboard-button {
+        padding: 15px 30px;
+        font-size: 1rem;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .vip-features {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .feature-item {
+        padding: 30px 20px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .vip-hero h3 {
+        font-size: 1.8rem;
+    }
+    
+    .vip-hero p {
+        font-size: 1rem;
+    }
+    
+    .vip-dashboard-button {
+        padding: 12px 25px;
+        font-size: 0.95rem;
     }
 }
 
