@@ -151,19 +151,162 @@
         <section id="vip" class="section vip-section">
             <div class="container">
                 <h2>Programme VIP</h2>
-                <div class="construction-container">
-                    <div class="construction-icon">
-                        <i class="fas fa-crown"></i>
+                <div class="vip-content">
+                    <div class="vip-hero">
+                        <div class="vip-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <h3>Tableau de Bord Professionnel</h3>
+                        <p>Accédez à notre plateforme de trading avancée avec des analyses en temps réel, des corrélations de devises et un calendrier économique intégré.</p>
+                        <button id="openVipDashboard" class="vip-dashboard-button">
+                            <i class="fas fa-chart-line"></i> Accéder au Tableau de Bord
+                        </button>
                     </div>
-                    <h3>Section en construction</h3>
-                    <p>Notre équipe travaille actuellement sur du contenu exceptionnel pour cette section.</p>
-                    <p>Revenez bientôt pour découvrir nos offres VIP exclusives!</p>
-                    <a href="https://t.me/misterpips" class="telegram-button" target="_blank">
-                        <i class="fab fa-telegram"></i> En savoir plus sur Telegram
-                    </a>
+                    <div class="vip-features">
+                        <div class="feature-item">
+                            <i class="fas fa-exchange-alt"></i>
+                            <h4>Corrélations en Temps Réel</h4>
+                            <p>USD/JPY, GBP/USD, AUD/USD, USD/CHF</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <h4>Calendrier Économique</h4>
+                            <p>Annonces importantes et impacts sur les devises</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-trending-up"></i>
+                            <h4>Indicateurs de Tendance</h4>
+                            <p>Analyses fondamentales automatisées</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
+
+        <!-- Modal VIP Dashboard -->
+        <div id="vipDashboardModal" class="vip-modal">
+            <div class="vip-modal-content">
+                <div class="vip-modal-header">
+                    <h2><i class="fas fa-crown"></i> Tableau de Bord VIP Misterpips</h2>
+                    <span class="vip-modal-close">&times;</span>
+                </div>
+                <div class="vip-modal-body">
+                    <div class="dashboard-grid">
+                        <!-- Corrélations des Devises -->
+                        <div class="dashboard-card correlation-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-exchange-alt"></i> Corrélations Forex</h3>
+                                <div class="refresh-btn" id="refreshCorrelations">
+                                    <i class="fas fa-sync-alt"></i>
+                                </div>
+                            </div>
+                            <div class="correlation-grid" id="correlationGrid">
+                                <!-- Le contenu sera injecté par JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Indicateurs de Tendance -->
+                        <div class="dashboard-card trend-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-trending-up"></i> Tendances en Temps Réel</h3>
+                                <div class="refresh-btn" id="refreshTrends">
+                                    <i class="fas fa-sync-alt"></i>
+                                </div>
+                            </div>
+                            <div class="trends-grid" id="trendsGrid">
+                                <!-- Le contenu sera injecté par JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Calendrier Économique -->
+                        <div class="dashboard-card calendar-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-calendar-alt"></i> Calendrier Économique</h3>
+                                <div class="calendar-links">
+                                    <a href="https://www.investing.com/economic-calendar/" target="_blank" class="calendar-link">
+                                        <i class="fas fa-external-link-alt"></i> Investing.com
+                                    </a>
+                                    <a href="https://www.forexfactory.com/calendar" target="_blank" class="calendar-link">
+                                        <i class="fas fa-external-link-alt"></i> ForexFactory
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="calendar-widget">
+                                <!-- Widget Investing.com alternatif -->
+                                <div id="economicCalendarWidget">
+                                    <!-- TradingView Economic Calendar Widget -->
+                                    <div class="tradingview-widget-container">
+                                        <div class="tradingview-widget-container__widget"></div>
+                                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+                                        {
+                                            "colorTheme": "dark",
+                                            "isTransparent": false,
+                                            "width": "100%",
+                                            "height": "400",
+                                            "locale": "fr",
+                                            "importanceFilter": "-1,0,1"
+                                        }
+                                        </script>
+                                    </div>
+                                    
+                                    <!-- Fallback: liens directs si le widget ne se charge pas -->
+                                    <div id="calendarFallback" class="calendar-fallback" style="display: none;">
+                                        <h4>📅 Calendrier Économique</h4>
+                                        <div class="fallback-links">
+                                            <a href="https://fr.investing.com/economic-calendar/" target="_blank" class="calendar-fallback-link">
+                                                <i class="fas fa-external-link-alt"></i>
+                                                Voir le calendrier complet sur Investing.com
+                                            </a>
+                                            <a href="https://www.forexfactory.com/calendar" target="_blank" class="calendar-fallback-link">
+                                                <i class="fas fa-external-link-alt"></i>
+                                                Calendrier ForexFactory
+                                            </a>
+                                            <a href="https://www.dailyfx.com/economic-calendar" target="_blank" class="calendar-fallback-link">
+                                                <i class="fas fa-external-link-alt"></i>
+                                                Calendrier DailyFX
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Alertes et Analyses -->
+                        <div class="dashboard-card alerts-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-bell"></i> Alertes & Analyses</h3>
+                            </div>
+                            <div class="alerts-content" id="alertsContent">
+                                <!-- Le contenu sera injecté par JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Performance des Pairs -->
+                        <div class="dashboard-card performance-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-chart-bar"></i> Performance 24h</h3>
+                                <div class="refresh-btn" id="refreshPerformance">
+                                    <i class="fas fa-sync-alt"></i>
+                                </div>
+                            </div>
+                            <div class="performance-content" id="performanceContent">
+                                <!-- Le contenu sera injecté par JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Actualités Forex -->
+                        <div class="dashboard-card news-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-newspaper"></i> Actualités Forex</h3>
+                            </div>
+                            <div class="news-content" id="newsContent">
+                                <!-- Le contenu sera injecté par JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer>

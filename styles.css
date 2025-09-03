@@ -394,6 +394,1100 @@ nav {
     margin-top: 30px;
 }
 
+/* VIP Section Styles */
+.vip-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.vip-hero {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.1), rgba(51, 153, 255, 0.05));
+    border-radius: 20px;
+    padding: 60px 40px;
+    text-align: center;
+    margin-bottom: 50px;
+    border: 1px solid rgba(0, 102, 204, 0.3);
+    backdrop-filter: blur(15px);
+}
+
+.vip-icon {
+    font-size: 4rem;
+    color: #FFD700;
+    margin-bottom: 30px;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    animation: pulse 2s infinite;
+}
+
+.vip-hero h3 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: var(--primary-color-light);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.vip-hero p {
+    font-size: 1.3rem;
+    color: var(--text-color-muted);
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+.vip-dashboard-button {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color-light));
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 10px 30px rgba(0, 102, 204, 0.3);
+}
+
+.vip-dashboard-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 102, 204, 0.5), var(--neon-glow);
+    background: linear-gradient(135deg, var(--primary-color-light), var(--primary-color));
+}
+
+.vip-dashboard-button i {
+    margin-right: 10px;
+}
+
+.vip-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.feature-item {
+    background: rgba(18, 18, 18, 0.8);
+    border-radius: 15px;
+    padding: 40px 30px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.feature-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 102, 204, 0.2);
+    border-color: var(--primary-color);
+}
+
+.feature-item i {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    display: block;
+}
+
+.feature-item h4 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--primary-color-light);
+}
+
+.feature-item p {
+    color: var(--text-color-muted);
+    font-size: 1.1rem;
+}
+
+/* VIP Modal Styles */
+.vip-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(5px);
+}
+
+.vip-modal-content {
+    background: linear-gradient(135deg, var(--background-color), var(--background-color-light));
+    margin: 2% auto;
+    padding: 0;
+    border-radius: 20px;
+    width: 95%;
+    max-width: 1400px;
+    height: 90vh;
+    overflow: hidden;
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 0 50px rgba(0, 102, 204, 0.5);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.vip-modal-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color-light));
+    color: white;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--primary-color-light);
+}
+
+.vip-modal-header h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.vip-modal-header i {
+    margin-right: 10px;
+    color: #FFD700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.vip-modal-close {
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 5px 10px;
+    border-radius: 50%;
+}
+
+.vip-modal-close:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+.vip-modal-body {
+    padding: 30px;
+    height: calc(90vh - 80px);
+    overflow-y: auto;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 25px;
+    height: 100%;
+}
+
+.dashboard-card {
+    background: rgba(18, 18, 18, 0.9);
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.dashboard-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 30px rgba(0, 102, 204, 0.2);
+    transform: translateY(-5px);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--primary-color-dark), var(--primary-color));
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--primary-color-light);
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.refresh-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.refresh-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(180deg);
+}
+
+.calendar-links {
+    display: flex;
+    gap: 10px;
+}
+
+.calendar-link {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.calendar-link:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Correlation Grid */
+.correlation-grid {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.correlation-pair {
+    background: rgba(0, 102, 204, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid rgba(0, 102, 204, 0.3);
+    transition: all 0.3s ease;
+}
+
+.correlation-pair:hover {
+    background: rgba(0, 102, 204, 0.2);
+    transform: scale(1.05);
+}
+
+.pair-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary-color-light);
+    margin-bottom: 10px;
+}
+
+.pair-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.pair-change {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.positive {
+    color: var(--success-color);
+}
+
+.negative {
+    color: var(--danger-color);
+}
+
+.neutral {
+    color: var(--text-color-muted);
+}
+
+/* Trends Grid */
+.trends-grid {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.trend-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 102, 204, 0.05);
+    border-radius: 10px;
+    padding: 15px;
+    border-left: 4px solid var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.trend-item:hover {
+    background: rgba(0, 102, 204, 0.1);
+    transform: translateX(5px);
+}
+
+.trend-currency {
+    font-weight: bold;
+    color: var(--primary-color-light);
+}
+
+.trend-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.trend-arrow {
+    font-size: 1.5rem;
+}
+
+.trend-strength {
+    font-size: 0.9rem;
+    padding: 4px 8px;
+    border-radius: 15px;
+    font-weight: bold;
+}
+
+.strong {
+    background: var(--success-color);
+    color: white;
+}
+
+.moderate {
+    background: var(--warning-color);
+    color: black;
+}
+
+.weak {
+    background: var(--danger-color);
+    color: white;
+}
+
+/* Performance Content */
+.performance-content {
+    padding: 20px;
+}
+
+.performance-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.performance-bar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.performance-label {
+    min-width: 80px;
+    font-weight: bold;
+    color: var(--primary-color-light);
+}
+
+.performance-bar-container {
+    flex: 1;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.performance-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.performance-value {
+    min-width: 60px;
+    text-align: right;
+    font-weight: bold;
+}
+
+/* News Content */
+.news-content {
+    padding: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.news-item {
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 0;
+    transition: all 0.3s ease;
+}
+
+.news-item:hover {
+    background: rgba(0, 102, 204, 0.05);
+    padding-left: 10px;
+}
+
+.news-item:last-child {
+    border-bottom: none;
+}
+
+.news-title {
+    font-weight: bold;
+    color: var(--primary-color-light);
+    margin-bottom: 5px;
+}
+
+.news-time {
+    color: var(--text-color-muted);
+    font-size: 0.9rem;
+}
+
+/* Alerts Content */
+.alerts-content {
+    padding: 20px;
+}
+
+.alert-item {
+    background: rgba(255, 193, 7, 0.1);
+    border-left: 4px solid var(--warning-color);
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.alert-item:hover {
+    background: rgba(255, 193, 7, 0.2);
+    transform: translateX(5px);
+}
+
+.alert-title {
+    font-weight: bold;
+    color: var(--warning-color);
+    margin-bottom: 5px;
+}
+
+.alert-description {
+    color: var(--text-color-muted);
+    font-size: 0.95rem;
+}
+
+/* Responsive Design pour le Dashboard VIP */
+@media (max-width: 1200px) {
+    .vip-modal-content {
+        width: 98%;
+        margin: 1% auto;
+        height: 95vh;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .vip-hero {
+        padding: 40px 20px;
+    }
+    
+    .vip-hero h3 {
+        font-size: 2rem;
+    }
+    
+    .vip-hero p {
+        font-size: 1.1rem;
+    }
+    
+    .vip-dashboard-button {
+        padding: 15px 30px;
+        font-size: 1rem;
+    }
+    
+    .vip-features {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .feature-item {
+        padding: 30px 20px;
+    }
+    
+    .vip-modal-content {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        margin: 0;
+    }
+    
+    .vip-modal-header {
+        padding: 15px 20px;
+    }
+    
+    .vip-modal-header h2 {
+        font-size: 1.4rem;
+    }
+    
+    .vip-modal-body {
+        padding: 20px 15px;
+        height: calc(100vh - 70px);
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .correlation-grid {
+        grid-template-columns: 1fr;
+        padding: 15px;
+        gap: 10px;
+    }
+    
+    .card-header {
+        padding: 12px 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .card-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .calendar-links {
+        flex-direction: column;
+        gap: 5px;
+        width: 100%;
+    }
+    
+    .calendar-link {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .trends-grid,
+    .performance-content,
+    .alerts-content,
+    .news-content {
+        padding: 15px;
+    }
+    
+    .trend-item {
+        padding: 12px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .trend-indicator {
+        align-self: flex-end;
+    }
+    
+    .performance-bar {
+        gap: 10px;
+    }
+    
+    .performance-label {
+        min-width: 60px;
+        font-size: 0.9rem;
+    }
+    
+    .performance-value {
+        min-width: 50px;
+        font-size: 0.9rem;
+    }
+    
+    .alert-item {
+        padding: 12px;
+    }
+    
+    .news-item {
+        padding: 12px 0;
+    }
+    
+    .news-title {
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+    
+    .economic-calendar iframe {
+        height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .vip-hero h3 {
+        font-size: 1.8rem;
+    }
+    
+    .vip-hero p {
+        font-size: 1rem;
+    }
+    
+    .vip-dashboard-button {
+        padding: 12px 25px;
+        font-size: 0.95rem;
+    }
+    
+    .vip-modal-header h2 {
+        font-size: 1.2rem;
+    }
+    
+    .card-header h3 {
+        font-size: 1rem;
+    }
+    
+    .pair-name {
+        font-size: 1.1rem;
+    }
+    
+    .pair-price {
+        font-size: 1.3rem;
+    }
+    
+    .correlation-pair {
+        padding: 12px;
+    }
+    
+    .trend-currency {
+        font-size: 0.95rem;
+    }
+    
+    .trend-strength {
+        font-size: 0.8rem;
+        padding: 3px 6px;
+    }
+    
+    .performance-label {
+        min-width: 50px;
+        font-size: 0.85rem;
+    }
+    
+    .performance-value {
+        min-width: 45px;
+        font-size: 0.85rem;
+    }
+    
+    .alert-title {
+        font-size: 0.95rem;
+    }
+    
+    .alert-description {
+        font-size: 0.9rem;
+    }
+    
+    .news-title {
+        font-size: 0.9rem;
+    }
+    
+    .news-time {
+        font-size: 0.8rem;
+    }
+}
+
+/* Animations additionnelles */
+@keyframes dataUpdate {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.correlation-pair:hover,
+.trend-item:hover,
+.performance-bar:hover {
+    animation: dataUpdate 0.3s ease;
+}
+
+/* Indicateurs de chargement */
+.loading-indicator {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(0, 102, 204, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Scrollbar personnalisé pour la modal */
+.vip-modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.vip-modal-body::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.vip-modal-body::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+.vip-modal-body::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color-light);
+}
+
+.news-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.news-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+.news-content::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 5px;
+}
+
+/* États de hover améliorés */
+.dashboard-card:hover .card-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color-light));
+}
+
+.refresh-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Animations pour les nouveaux données */
+.data-updated {
+    animation: dataUpdate 0.5s ease;
+}
+
+/* Messages d'état améliorés */
+.status-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 10px 0;
+    font-weight: 500;
+}
+
+.status-success {
+    background: rgba(76, 175, 80, 0.1);
+    border: 1px solid var(--success-color);
+    color: var(--success-color);
+}
+
+.status-warning {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid var(--warning-color);
+    color: var(--warning-color);
+}
+
+.status-error {
+    background: rgba(244, 67, 54, 0.1);
+    border: 1px solid var(--danger-color);
+    color: var(--danger-color);
+}
+
+/* Styles pour les nouvelles fonctionnalités du dashboard */
+
+/* Informations techniques dans les corrélations */
+.technical-info {
+    font-size: 0.8rem;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(0, 102, 204, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.technical-info small {
+    color: var(--text-color-muted);
+}
+
+.pair-volume {
+    margin-top: 5px;
+    font-size: 0.8rem;
+    color: var(--primary-color);
+}
+
+/* Détails des devises dans les tendances */
+.currency-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 5px;
+}
+
+.currency-details small {
+    font-size: 0.7rem;
+    color: var(--text-color-muted);
+}
+
+.trend-momentum {
+    text-align: right;
+}
+
+.trend-momentum small {
+    font-size: 0.8rem;
+    color: var(--primary-color-light);
+    font-weight: bold;
+}
+
+/* Styles pour les actualités améliorées */
+.clickable-news {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.clickable-news:hover {
+    background: rgba(0, 102, 204, 0.1);
+    border-left-color: var(--primary-color);
+    padding-left: 15px;
+    transform: translateX(5px);
+}
+
+.news-icon {
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    margin-right: 8px;
+}
+
+.news-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.news-source {
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    background: rgba(0, 102, 204, 0.1);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.news-summary {
+    font-size: 0.9rem;
+    color: var(--text-color-muted);
+    line-height: 1.4;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Styles pour les alertes améliorées */
+.clickable-alert {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.clickable-alert:hover {
+    background: rgba(255, 193, 7, 0.15);
+    transform: translateX(8px);
+    box-shadow: -4px 0 0 var(--warning-color);
+}
+
+.alert-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.alert-priority {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.alert-priority.high {
+    background: var(--danger-color);
+    color: white;
+}
+
+.alert-priority.medium {
+    background: var(--warning-color);
+    color: black;
+}
+
+.alert-priority.low {
+    background: var(--primary-color);
+    color: white;
+}
+
+.alert-action {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 193, 7, 0.3);
+    font-style: italic;
+}
+
+.alert-action small {
+    color: var(--primary-color-light);
+}
+
+/* Fallback pour le calendrier */
+.calendar-fallback {
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.calendar-fallback h4 {
+    color: var(--primary-color-light);
+    margin-bottom: 20px;
+}
+
+.fallback-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.calendar-fallback-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color-light));
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.calendar-fallback-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 102, 204, 0.3);
+}
+
+/* Indicateur de statut des corrélations */
+.correlation-pair {
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.correlation-pair::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 102, 204, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.correlation-pair:hover::before {
+    left: 100%;
+}
+
+/* Responsive pour les nouvelles fonctionnalités */
+@media (max-width: 768px) {
+    .technical-info {
+        font-size: 0.7rem;
+    }
+    
+    .currency-details small {
+        font-size: 0.65rem;
+    }
+    
+    .news-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .alert-header {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .alert-priority {
+        align-self: flex-start;
+    }
+    
+    .fallback-links {
+        gap: 8px;
+    }
+    
+    .calendar-fallback-link {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Animation pour l'arrivée des données */
+.data-loaded {
+    animation: dataLoaded 0.5s ease-out;
+}
+
+@keyframes dataLoaded {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Styles pour le widget TradingView */
+.tradingview-widget-container {
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(18, 18, 18, 0.9);
+}
+
+/* Indicateur de connexion API */
+.api-status {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--success-color);
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+.api-status.offline {
+    background: var(--danger-color);
+    box-shadow: 0 0 10px rgba(244, 67, 54, 0.5);
+}
+
+.api-status.loading {
+    background: var(--warning-color);
+    animation: pulse 1s infinite;
+}
+
 /* Footer */
 footer {
     background-color: rgba(10, 10, 10, 0.95);
