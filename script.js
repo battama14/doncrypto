@@ -525,10 +525,46 @@ function initVipDashboard() {
     const closeButton = document.querySelector('.vip-modal-close');
     
     if (openButton && modal && closeButton) {
-        // Ouvrir la modal
-        openButton.addEventListener('click', () => {
+        // Ouvrir la modal avec timing amélioré
+        openButton.addEventListener('click', async () => {
+            console.log('🚀 Ouverture du tableau de bord VIP...');
+            
+            // Afficher la modal immédiatement
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
+            
+            // Attendre que la modal soit complètement affichée dans le DOM
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            // Vérifier que tous les éléments sont disponibles
+            const requiredElements = [
+                'correlationGrid',
+                'trendsGrid', 
+                'performanceContent',
+                'alertsContent',
+                'newsContent'
+            ];
+            
+            let allElementsReady = false;
+            let attempts = 0;
+            const maxAttempts = 10;
+            
+            while (!allElementsReady && attempts < maxAttempts) {
+                allElementsReady = requiredElements.every(id => {
+                    const element = document.getElementById(id);
+                    return element !== null;
+                });
+                
+                if (!allElementsReady) {
+                    console.log(`⏳ Attente des éléments DOM (tentative ${attempts + 1})`);
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                } else {
+                    console.log('✅ Tous les éléments DOM sont prêts');
+                }
+            }
+            
+            // Initialiser les données
             initDashboardData();
             
             // Vérifier le calendrier après un délai
@@ -611,35 +647,67 @@ function setupRefreshButtons() {
     }
 }
 
-// Initialisation des données du dashboard
+// Initialisation des données du dashboard avec séquencing correct
 async function initDashboardData() {
     showLoadingState();
     
     try {
+        // ÉTAPE 1: Charger les données forex AVANT tout le reste
+        console.log('🔄 Chargement des données forex...');
+        await fetchForexData();
+        
+        // ÉTAPE 2: Attendre un peu pour que les données soient bien disponibles
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // ÉTAPE 3: Mettre à jour tous les composants une fois les données prêtes
+        console.log('📊 Mise à jour des composants...');
         await Promise.all([
-            fetchForexData(),
-            updateCorrelations(),
+            updateCorrelationsWithRetry(),
             updateTrends(),
-            updatePerformance(),
+            updatePerformanceWithRetry(),
             updateAlerts(),
             updateNews()
         ]);
         
-        // Mettre à jour automatiquement toutes les 30 secondes
-        dashboardUpdateInterval = setInterval(() => {
-            fetchForexData();
+        // ÉTAPE 4: Forcer une mise à jour supplémentaire après 1 seconde pour être sûr
+        setTimeout(() => {
+            console.log('🔁 Mise à jour de sécurité...');
+            updateCorrelations();
+            updatePerformance();
+            
+            // Ajouter l'animation de chargement terminé
+            const dashboardCards = document.querySelectorAll('.dashboard-card');
+            dashboardCards.forEach(card => {
+                card.classList.add('data-loaded');
+            });
+        }, 1000);
+        
+        // ÉTAPE 5: Mettre à jour automatiquement toutes les 30 secondes
+        dashboardUpdateInterval = setInterval(async () => {
+            await fetchForexData();
+            await new Promise(resolve => setTimeout(resolve, 200));
             updateCorrelations();
             updateTrends();
             updatePerformance();
         }, 30000);
         
+        console.log('✅ Dashboard initialisé avec succès');
+        
     } catch (error) {
-        console.error('Erreur lors de l\'initialisation du dashboard:', error);
+        console.error('❌ Erreur lors de l\'initialisation du dashboard:', error);
         showErrorState();
+        
+        // Essayer de récupérer avec des données de fallback
+        setTimeout(() => {
+            console.log('🔄 Tentative de récupération...');
+            forexData = generateAdvancedFallbackData();
+            updateCorrelations();
+            updatePerformance();
+        }, 2000);
     }
 }
 
-// Affichage de l'état de chargement
+// Affichage de l'état de chargement amélioré
 function showLoadingState() {
     const grids = ['correlationGrid', 'trendsGrid', 'performanceContent', 'alertsContent', 'newsContent'];
     
@@ -647,13 +715,43 @@ function showLoadingState() {
         const grid = document.getElementById(gridId);
         if (grid) {
             grid.innerHTML = `
-                <div style="text-align: center; padding: 40px; color: var(--text-color-muted);">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 15px;"></i>
-                    <p>Chargement des données en temps réel...</p>
+                <div style="
+                    text-align: center; 
+                    padding: 40px 20px; 
+                    color: var(--text-color-muted);
+                    background: rgba(0, 102, 204, 0.05);
+                    border-radius: 10px;
+                    margin: 10px;
+                ">
+                    <i class="fas fa-chart-line fa-spin" style="
+                        font-size: 2.5rem; 
+                        margin-bottom: 15px; 
+                        color: var(--primary-color);
+                    "></i>
+                    <p style="
+                        font-size: 16px; 
+                        margin: 10px 0; 
+                        color: var(--primary-color-light);
+                    ">
+                        🔄 Chargement des données en temps réel...
+                    </p>
+                    <div style="
+                        background: rgba(0, 102, 204, 0.1); 
+                        padding: 8px 15px; 
+                        border-radius: 15px; 
+                        margin-top: 15px; 
+                        font-size: 12px;
+                        color: var(--primary-color);
+                        display: inline-block;
+                    ">
+                        📡 Connexion aux APIs Forex...
+                    </div>
                 </div>
             `;
         }
     });
+    
+    console.log('📡 État de chargement affiché pour toutes les sections');
 }
 
 // Affichage de l'état d'erreur
@@ -1030,7 +1128,56 @@ function generateAdvancedFallbackData() {
         };
     });
     
+    console.log('📊 Données de fallback générées:', fallbackData);
     return fallbackData;
+}
+
+// Générer une volatilité réaliste basée sur l'heure et la paire
+function generateRealisticVolatility(pair, timestamp) {
+    const hour = timestamp.getHours();
+    const minute = timestamp.getMinutes();
+    
+    // Volatilité de base selon la paire
+    const baseVolatility = {
+        'USD/JPY': 0.8,
+        'EUR/USD': 0.6,
+        'GBP/USD': 0.9,
+        'AUD/USD': 0.7,
+        'USD/CHF': 0.5,
+        'USD/CAD': 0.6
+    };
+    
+    const base = baseVolatility[pair] || 0.6;
+    
+    // Multiplicateur selon l'heure (sessions de trading)
+    let sessionMultiplier = 1;
+    if (hour >= 8 && hour <= 17) { // Session européenne/américaine
+        sessionMultiplier = 1.5;
+    } else if (hour >= 22 || hour <= 6) { // Session asiatique
+        sessionMultiplier = 1.2;
+    }
+    
+    // Ajouter du bruit aléatoire
+    const randomFactor = (Math.random() - 0.5) * 2; // Entre -1 et 1
+    
+    return base * sessionMultiplier * (1 + randomFactor * 0.5);
+}
+
+// Générer un volume réaliste
+function generateRealisticVolume(pair) {
+    const baseVolumes = {
+        'USD/JPY': 2500000,
+        'EUR/USD': 3000000,
+        'GBP/USD': 1800000,
+        'AUD/USD': 1200000,
+        'USD/CHF': 800000,
+        'USD/CAD': 1000000
+    };
+    
+    const base = baseVolumes[pair] || 1000000;
+    const variation = (Math.random() * 0.4) + 0.8; // Entre 0.8 et 1.2
+    
+    return Math.round(base * variation);
 }
 
 // Mise à jour des corrélations avec données techniques
@@ -1586,4 +1733,67 @@ function generateTechnicalAlerts() {
     }
     
     return alerts.slice(0, 5); // Limiter à 5 alertes
+}
+
+// Fonctions avec retry pour assurer l'affichage
+async function updateCorrelationsWithRetry(maxRetries = 3) {
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            updateCorrelations();
+            
+            // Vérifier si les données sont bien affichées
+            const correlationGrid = document.getElementById('correlationGrid');
+            if (correlationGrid && correlationGrid.children.length > 0) {
+                console.log(`✅ Corrélations affichées (tentative ${i + 1})`);
+                return;
+            }
+            
+            // Si pas de contenu, attendre et réessayer
+            if (i < maxRetries - 1) {
+                console.log(`🔄 Retry corrélations (tentative ${i + 1})`);
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+        } catch (error) {
+            console.error(`❌ Erreur corrélations tentative ${i + 1}:`, error);
+            if (i < maxRetries - 1) {
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+        }
+    }
+    
+    // Si toutes les tentatives échouent, utiliser les données de fallback
+    console.log('🆘 Utilisation des données de fallback pour les corrélations');
+    forexData = generateAdvancedFallbackData();
+    updateCorrelations();
+}
+
+async function updatePerformanceWithRetry(maxRetries = 3) {
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            updatePerformance();
+            
+            // Vérifier si les données sont bien affichées
+            const performanceContent = document.getElementById('performanceContent');
+            if (performanceContent && performanceContent.children.length > 0) {
+                console.log(`✅ Performance affichée (tentative ${i + 1})`);
+                return;
+            }
+            
+            // Si pas de contenu, attendre et réessayer
+            if (i < maxRetries - 1) {
+                console.log(`🔄 Retry performance (tentative ${i + 1})`);
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+        } catch (error) {
+            console.error(`❌ Erreur performance tentative ${i + 1}:`, error);
+            if (i < maxRetries - 1) {
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+        }
+    }
+    
+    // Si toutes les tentatives échouent, utiliser les données de fallback
+    console.log('🆘 Utilisation des données de fallback pour la performance');
+    forexData = generateAdvancedFallbackData();
+    updatePerformance();
 }
